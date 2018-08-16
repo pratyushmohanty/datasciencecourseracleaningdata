@@ -214,6 +214,10 @@ data_tidy_grouped_by_activity_subject <-
 ## verify - this should give an output of 180 rows x 564 cols
 dim(data_tidy_grouped_by_activity_subject)
 
+## export the results to a txt file
+write.table(data_tidy_grouped_by_activity_subject, 
+            file = "./results/tidy_dataset_step5.txt", row.names = FALSE)
+
 ## run below to remove all objects in memory
 rm(list = ls())
 

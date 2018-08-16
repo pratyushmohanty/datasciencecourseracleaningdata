@@ -68,6 +68,7 @@ There are 6 activities and 30 subjects. So, the ouput will be 180 rows.
 The code uses library dplyr, for grouping, and then summarise all to calculate mean of each column.
 The result is finally converted to a data frame - data_tidy_grouped_by_activity_subject
 
+Finally, export the data to a txt file at ./results/tidy_dataset_step5.txt
 
 **NOTE** - There is a command to clean up all objects post execution.
 
