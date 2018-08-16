@@ -70,7 +70,7 @@ The result is finally converted to a data frame - data_tidy_grouped_by_activity_
 
 Finally, export the data to a txt file at ./results/tidy_dataset_step5.txt
 
-**NOTE** - There is a command to clean up all objects post execution.
+**NOTE** - There is a command to clean up all objects. This is commented out, but can be used post execution.
 
 
 
