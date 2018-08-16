@@ -19,7 +19,7 @@ It has comments for each section for the below -
 4. Appropriately labels the data set with descriptive variable names.
 5. From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject.
 
-#### 1 Merges the training and the test sets to create one data set.
+#### 1. Merges the training and the test sets to create one data set.
 
 The output from this section is a dataframe named 'data_tidy'
 
@@ -70,7 +70,7 @@ The result is finally converted to a data frame - data_tidy_grouped_by_activity_
 
 Finally, export the data to a txt file at ./results/tidy_dataset_step5.txt
 
-**NOTE** - There is a command to clean up all objects. This is commented out, but can be used post execution.
+**NOTE** - There is a command to clean up all objects at the end. This is commented out, but can be used post execution.
 
 
 
