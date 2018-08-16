@@ -1,10 +1,11 @@
 ## Note:
 ## The relative path to the dataset folder is ./data/UCI HAR Dataset
 
-if (!require("plyr")) 
-        install.packages("plyr");
 
-library(plyr)
+if (!require("dplyr")) 
+        install.packages("dplyr");
+
+library(dplyr)
 
 ## ------------------------------------------------------------------
 ## 1. Merges the training and the test sets to create one data set.
@@ -74,15 +75,36 @@ dim(data_test_labels)
 ## add a column called activityId
 data_test$activityId <- data_test_labels[,1]
 
-## 1.6 Merge the two datasets
+## 1.6 get the training subject ids and append them to training set
+## - 'train/subject_train.txt': 
+## Each row identifies the subject who performed the activity for 
+## each window sample. Its range is from 1 to 30.
+
+url_file_training_subjects <- './data/UCI HAR Dataset/train/subject_train.txt'
+data_training_subjects <- read.table(url_file_training_subjects, header = FALSE)
+
+## add column to the end
+data_training$subjectId <- data_training_subjects[, 1]
+
+## 1.6 get the test subject ids and append them to test set
+## - 'test/subject_test.txt'
+
+url_file_test_subjects <- './data/UCI HAR Dataset/test/subject_test.txt'
+data_test_subjects <- read.table(url_file_test_subjects, header = FALSE)
+
+## add column to end
+data_test$subjectId <- data_test_subjects[, 1]
+
+
+## 1.8 Merge the two datasets
 ## Append the rows of the test dataset to training dataset
 ## This is the answer to the first part
-data <- rbind(data_training, data_test)
+data_tidy <- rbind(data_training, data_test)
 
 ## verify the merged dataset - 
-## this should ouput 10299 rows (= 7352 + 2947) and 562 columnns
-# str(data)
-dim(data)
+## this should ouput 10299 rows (= 7352 + 2947) and 563 columnns
+# str(data_tidy)
+dim(data_tidy)
 
 
 ## ------------------------------------------------------------------
@@ -92,7 +114,7 @@ dim(data)
 ## the mean and standard deviation for each measurement.
 
 ## get colnames
-columns <- names(data)
+columns <- names(data_tidy)
 columnsWithMean <- columns[grepl("-mean()", columns) ]
 length(columnsWithMean)
 
@@ -104,7 +126,7 @@ length(columnsToKeep)
 
 ## This is the answer to the 2nd point - extract data with 
 ## only mean and std measures only
-data_mean_and_std_deviations <- data[, columnsToKeep]
+data_mean_and_std_deviations <- data_tidy[, columnsToKeep]
 
 ## verify - should show 10299 rows and 79 columns
 dim(data_mean_and_std_deviations)
@@ -126,19 +148,26 @@ colnames(data_activity_labels) <- c("activityId", "activityName")
 ## add the activity name to the original dataset
 ## by joining it with the data_activity_labels data frame 
 ## this is the answer to the 3rd question
-data <- join(data, data_activity_labels)
+data_tidy <- join(data_tidy, data_activity_labels)
 
-## verify dimensions - should have 10299 rows and 563 columns now
-dim(data)
+## verify dimensions - should have 10299 rows and 564 columns now
+dim(data_tidy)
 
 ## ------------------------------------------------------------------
 
 ## 4. Appropriately labels the data set with descriptive variable names.
 ## check the column names 
 
-columnNames_data <- names(data)
+columnNames_data <- names(data_tidy)
+## there are duplicate columns 
+if(length(columnNames_data) != length(unique(columnNames_data))) {
+        message("duplicate column names found!")
+}
+
+## make columns unique
+cleanNames <- make.unique(columnNames_data, sep="_")
 ## get rid of ()
-cleanNames <- gsub(x = columnNames_data, pattern = "\\()", replacement = "") 
+cleanNames <- gsub(x = cleanNames, pattern = "\\()", replacement = "") 
 ## replace '(' or ')' with an underscore
 cleanNames <- gsub(x = cleanNames, pattern = "\\(", replacement = "_")
 cleanNames <- gsub(x = cleanNames, pattern = "\\)", replacement = "_")
@@ -153,11 +182,37 @@ cleanNames <- gsub('\\_$', '', cleanNames)
 
 ## assign the names to the dataset
 ## this is the answer to the 4th question
-colnames(data) <- cleanNames
+colnames(data_tidy) <- cleanNames
 
 ## ------------------------------------------------------------------
 
 ## 5. From the data set in step 4, creates a second, independent tidy data set
-
-
 ## with the average of each variable for each activity and each subject.
+
+## group by activity and subject
+## there are 561 variables 
+## to be grouped by 3 (activityId, activityName, subjectId)
+
+## using library dplyr - this will give a list of 180 dataframes
+# pipe the dataset to group by
+# then pipe to summarise all to calculate mean of each column
+
+data_tidy_grouped_by_activity_subject <- 
+        data_tidy %>% 
+        group_by(
+                activityId, activityName, subjectId
+                ) %>%
+        summarize_all(
+                     funs(mean(., na.rm=TRUE))
+                     )
+
+data_tidy_grouped_by_activity_subject <-
+        as.data.frame(data_tidy_grouped_by_activity_subject)
+
+## verify - this should give an output of 180 rows x 564 cols
+dim(data_tidy_grouped_by_activity_subject)
+
+## run below to remove all objects in memory
+rm(list = ls())
+
+
