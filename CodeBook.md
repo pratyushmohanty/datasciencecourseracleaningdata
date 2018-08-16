@@ -2,7 +2,7 @@
 
 ### Code, data, libraries
 
-All the code is in the run_analysis.R
+All the code is in the run_analysis.R file
 
 The data is contained in the 'data' folder. 
 For example, the training set file is in './data/UCI HAR Dataset/train/X_train.txt'
@@ -15,6 +15,15 @@ There is a dependency on 'dplyr' package
 - New variables added:
   - *activityId*, *activityName* (added for the activities)
   - *subjectId* (added from the subject test/train files, varies from 1 to 30)
+
+| activityId | activityName |
+| ---------- | ------------ |
+|1 | WALKING |
+|2 | WALKING_UPSTAIRS |
+|3 | WALKING_DOWNSTAIRS |
+|4 | SITTING |
+|5 | STANDING |
+|6 | LAYING |
 
 ### Resulting Data
 
