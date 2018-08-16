@@ -134,6 +134,26 @@ dim(data)
 ## ------------------------------------------------------------------
 
 ## 4. Appropriately labels the data set with descriptive variable names.
+## check the column names 
+
+columnNames_data <- names(data)
+## get rid of ()
+cleanNames <- gsub(x = columnNames_data, pattern = "\\()", replacement = "") 
+## replace '(' or ')' with an underscore
+cleanNames <- gsub(x = cleanNames, pattern = "\\(", replacement = "_")
+cleanNames <- gsub(x = cleanNames, pattern = "\\)", replacement = "_")
+## replace ',' with underscores
+cleanNames <- gsub(x = cleanNames, pattern = "\\,", replacement = "_")
+## replace '-' with underscores
+cleanNames <- gsub(x = cleanNames, pattern = "\\-", replacement = "_")
+## repalce double underscores with one
+cleanNames <- gsub(x = cleanNames, pattern = "\\__", replacement = "_")
+## remove trailing underscores using a regex
+cleanNames <- gsub('\\_$', '', cleanNames)
+
+## assign the names to the dataset
+## this is the answer to the 4th question
+colnames(data) <- cleanNames
 
 ## ------------------------------------------------------------------
 
