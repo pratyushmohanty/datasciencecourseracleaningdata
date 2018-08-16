@@ -4,6 +4,7 @@ The project has the following:
  - data (directory with 'UCI HAR Dataset' directory)
  
    This has been downloaded from - https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip
+   
    Full description available at: http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones
    
  - results (directory where Tidy Data from step 5 is exported as a file)
