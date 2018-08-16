@@ -86,7 +86,7 @@ data_training_subjects <- read.table(url_file_training_subjects, header = FALSE)
 ## add column to the end
 data_training$subjectId <- data_training_subjects[, 1]
 
-## 1.6 get the test subject ids and append them to test set
+## 1.7 get the test subject ids and append them to test set
 ## - 'test/subject_test.txt'
 
 url_file_test_subjects <- './data/UCI HAR Dataset/test/subject_test.txt'
@@ -116,13 +116,13 @@ dim(data_tidy)
 ## get colnames
 columns <- names(data_tidy)
 columnsWithMean <- columns[grepl("-mean()", columns) ]
-length(columnsWithMean)
+#length(columnsWithMean)
 
 columnsWithStdDeviation <- columns[grepl("-std()", columns) ]
-length(columnsWithStdDeviation)
+#length(columnsWithStdDeviation)
 
 columnsToKeep <- c(columnsWithMean, columnsWithStdDeviation)
-length(columnsToKeep)
+#length(columnsToKeep)
 
 ## This is the answer to the 2nd point - extract data with 
 ## only mean and std measures only
@@ -145,7 +145,7 @@ data_activity_labels <- read.table(url_file_activity_labels, header = FALSE, str
 ## 3.2 set the column names
 colnames(data_activity_labels) <- c("activityId", "activityName")
 
-## add the activity name to the original dataset
+## 3.3 add the activity name to the original dataset
 ## by joining it with the data_activity_labels data frame 
 ## this is the answer to the 3rd question
 data_tidy <- join(data_tidy, data_activity_labels)
@@ -206,6 +206,8 @@ data_tidy_grouped_by_activity_subject <-
                      funs(mean(., na.rm=TRUE))
                      )
 
+## convert to a data frame
+## this is the answer to the 5th question
 data_tidy_grouped_by_activity_subject <-
         as.data.frame(data_tidy_grouped_by_activity_subject)
 
