@@ -1,7 +1,12 @@
 ## Note:
 ## The relative path to the dataset folder is ./data/UCI HAR Dataset
 
+if (!require("plyr")) 
+        install.packages("plyr");
 
+library(plyr)
+
+## ------------------------------------------------------------------
 ## 1. Merges the training and the test sets to create one data set.
 
 ## 1.1 Get the training dataset
@@ -71,23 +76,66 @@ data_test$activityId <- data_test_labels[,1]
 
 ## 1.6 Merge the two datasets
 ## Append the rows of the test dataset to training dataset
+## This is the answer to the first part
 data <- rbind(data_training, data_test)
 
-## check the merged dataset - 
+## verify the merged dataset - 
 ## this should ouput 10299 rows (= 7352 + 2947) and 562 columnns
 # str(data)
 dim(data)
 
+
+## ------------------------------------------------------------------
+
+
 ## 2. Extracts only the measurements on 
 ## the mean and standard deviation for each measurement.
 
+## get colnames
+columns <- names(data)
+columnsWithMean <- columns[grepl("-mean()", columns) ]
+length(columnsWithMean)
+
+columnsWithStdDeviation <- columns[grepl("-std()", columns) ]
+length(columnsWithStdDeviation)
+
+columnsToKeep <- c(columnsWithMean, columnsWithStdDeviation)
+length(columnsToKeep)
+
+## This is the answer to the 2nd point - extract data with 
+## only mean and std measures only
+data_mean_and_std_deviations <- data[, columnsToKeep]
+
+## verify - should show 10299 rows and 79 columns
+dim(data_mean_and_std_deviations)
+
+## ------------------------------------------------------------------
 
 ## 3. Uses descriptive activity names to name the activities in the data set
 
 ## 3.1 get the activity labels
+## - 'activity_labels.txt': Links the class labels with their activity name.
+## Read the file
+
+url_file_activity_labels <- './data/UCI HAR Dataset/activity_labels.txt'
+data_activity_labels <- read.table(url_file_activity_labels, header = FALSE, stringsAsFactors = FALSE)
+
+## 3.2 set the column names
+colnames(data_activity_labels) <- c("activityId", "activityName")
+
+## add the activity name to the original dataset
+## by joining it with the data_activity_labels data frame 
+## this is the answer to the 3rd question
+data <- join(data, data_activity_labels)
+
+## verify dimensions - should have 10299 rows and 563 columns now
+dim(data)
+
+## ------------------------------------------------------------------
 
 ## 4. Appropriately labels the data set with descriptive variable names.
 
+## ------------------------------------------------------------------
 
 ## 5. From the data set in step 4, creates a second, independent tidy data set
 
